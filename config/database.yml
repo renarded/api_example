@@ -1,0 +1,13 @@
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: api_example_db
+  username: edouard
+  password: password1
+
+test:
+  adapter: postgresql
+  encoding: unicode
+  database: api_example_db
+  username: edouard
+  password: password1
