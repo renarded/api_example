@@ -1,5 +1,11 @@
 class Api::V1::UsersController < ApiController
 
+  def index
+    users = User.all
+    render json: users
+  end
+
+
   private
 
   def permitted_params
