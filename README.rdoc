@@ -1,1 +1,7 @@
 Simple REST api example using ruby on rails without authentication
+
+- Based on 3 ressources : users, posts, comments
+
+- All CRUD actions available
+
+- Access to all the routes by calling the route URL : "/api/v1"
