@@ -1,1 +1,1 @@
-Simple REST api example using ruby on rails
+Simple REST api example using ruby on rails without authentication
