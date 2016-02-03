@@ -10,6 +10,15 @@ class Api::V1::UsersController < ApiController
     render json: user
   end
 
+  def create
+    user = User.new(permitted_params)
+    if user.save
+      render json: user, status: 201
+    else
+      render json: { error: "Could not create user." }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def permitted_params
