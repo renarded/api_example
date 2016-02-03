@@ -1,5 +1,8 @@
 class Api::V1::UsersController < ApiController
 
+  skip_before_filter :current_user_logged, only: [:index, :show, :create]
+  before_filter :is_format_type_correct, only: [:create]
+
   def index
     users = User.all
     render json: users
