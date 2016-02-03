@@ -8,7 +8,12 @@ class ApiController < ApplicationController
       render json: { error: 'Not Found' }, status: 404
   end
 
-  skip_before_filter :verify_authenticity_token  
+  skip_before_filter :verify_authenticity_token 
+
+  def index
+    routes = `rake routes`.split("\n").map{ |r| r.gsub(', ', ',').split(' ') }
+    render json: routes
+  end
 
   private
   
