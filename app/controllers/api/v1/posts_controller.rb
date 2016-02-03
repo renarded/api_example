@@ -1,7 +1,7 @@
 class Api::V1::PostsController < ApiController
 
   skip_before_filter :current_user_logged, only: [:index, :show]
-  before_filter :is_format_type_correct, only: [:create]
+  before_filter :is_format_type_correct, only: [:create, :update]
 
   def index
     if permitted_params[:user_id].nil?
@@ -24,6 +24,19 @@ class Api::V1::PostsController < ApiController
       render json: post
     else
       render json: { error: "Could not create post." }, status: :unprocessable_entity
+    end
+  end
+
+  def update
+    post = Post.find(permitted_params[:id])
+
+    if !current_user_logged.posts.include?(post)
+      render json: { error: "Not allowed." }, status: 401 and return
+    end 
+    if post.update(permitted_params)
+      render json: post, status: 200
+    else
+      render json: { error: "Could not update post." }, status: :unprocessable_entity
     end
   end
 
