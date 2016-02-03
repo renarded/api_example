@@ -2,6 +2,7 @@ class Api::V1::CommentsController < ApiController
 
   skip_before_filter :current_user_logged, only: [:index, :show]
   before_filter :is_format_type_correct, only: [:create, :update]
+  before_filter :allow_modification, only: [:update, :destroy]
 
   def index
     if permitted_params[:user_id].nil?
@@ -34,11 +35,6 @@ class Api::V1::CommentsController < ApiController
   def update
     comment = Comment.find(permitted_params[:id])
 
-    if ( (current_user_logged.id != comment.user_id) ||
-       (Post.find(permitted_params[:post_id]).id != comment.post_id) ) 
-      render json: { error: "Not allowed." }, status: 401 and return
-    end
-
     if comment.update(permitted_params)
       render json: comment, status: 200
     else
@@ -46,9 +42,28 @@ class Api::V1::CommentsController < ApiController
     end
   end
 
+  def destroy
+    comment = Comment.find(permitted_params[:id])
+    
+    if comment.destroy
+      render json: { message: "Comment has been destroyed." }, status: 200
+    else
+      render json: { error: "Could not destroy comment." }, status: 404
+    end
+  end
+
   private
 
   def permitted_params
     params.permit(:id, :post_id, :user_id, :content)
+  end
+
+  def allow_modification
+    comment = Comment.find(permitted_params[:id])
+
+    if ( (current_user_logged.id != comment.user_id) ||
+       (Post.find(permitted_params[:post_id]).id != comment.post_id) ) 
+      render json: { error: "Not allowed." }, status: 401
+    end
   end
 end
